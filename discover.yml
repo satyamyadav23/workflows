@@ -1,0 +1,114 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: discover
+  x-ibm-name: discover
+  contact:
+    name: satyam
+basePath: /
+x-ibm-configuration:
+  properties:
+    target-url:
+      value: http://demo2734163.mockable.io/
+      description: url_description
+      encoded: false
+  cors:
+    enabled: true
+  gateway: datapower-api-gateway
+  type: rest
+  phase: realized
+  enforced: true
+  testable: true
+  assembly:
+    execute:
+      - invoke:
+          title: invoke
+          version: 2.0.0
+          verb: keep
+          target-url: $(target-url)$(request.path)$(request.search)
+          follow-redirects: false
+          timeout: 60
+          parameter-control:
+            type: allowlist
+            values: []
+          header-control:
+            type: blocklist
+            values: []
+          inject-proxy-headers: true
+          persistent-connection: true
+      - log:
+          version: 2.1.0
+          title: log
+          log-level: default
+          mode: gather-only
+      - set-variable:
+          version: 2.0.0
+          title: set-variable
+          actions:
+            - set: log.custom_data.discoveryServiceCollection
+              value: 'true'
+              type: string
+          description: Setting specific collector key
+      - set-variable:
+          version: 2.0.0
+          title: set-variable
+          actions:
+            - set: log.custom_data.apiTargetURL
+              value: $(target-url)
+              type: string
+          description: Setting specific collector target URL
+    catch: []
+    finally: []
+  activity-log:
+    enabled: true
+    success-content: payload
+    error-content: payload
+  catalogs: {}
+  buffering: true
+paths:
+  /{+pathparam}:
+    get:
+      responses:
+        '200':
+          description: success
+          schema:
+            type: string
+      consumes: []
+      produces: []
+    post:
+      responses:
+        '201':
+          description: success
+          schema:
+            type: string
+      consumes: []
+      produces: []
+    put:
+      responses:
+        '201':
+          description: success
+          schema:
+            type: string
+    patch:
+      responses:
+        '200':
+          description: success
+          schema:
+            type: string
+      consumes: []
+      produces: []
+    delete:
+      responses:
+        '204':
+          description: success
+          schema:
+            type: string
+      consumes: []
+      produces: []
+    parameters:
+      - name: +pathparam
+        in: path
+        required: true
+        type: string
+schemes:
+  - https
